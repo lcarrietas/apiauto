@@ -1,0 +1,116 @@
+Close a task
+
+	- curl -X POST "https://api.todoist.com/rest/v2/tasks/7240177104/close" -H "Authorization: Bearer token"
+	Status:
+	204 (No Content)
+============================================================================================================================
+	- curl -X POST "https://api.todoist.com/rest/v2/tasks/72401771048/close" -H "Authorization: Bearer token"
+	Status:
+	404 (Not Found)
+	Task not found
+	- ============================================================================================================================
+	- curl -X POST "https://api.todoist.com/rest/v2/tasks/7240177104/clos" -H "Authorization: Bearer token"
+	Status:
+	404 (Not Found)
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	<html xmlns="http://www.w3.org/1999/xhtml">
+	
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <title>404 - Sorry, the page you're looking for isn’t here anymore</title>
+	
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	
+	
+	    <style type="text/css">
+	        body{
+	            text-align:center;
+	            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	            font-size:small;
+	            color:#555;
+	            line-height: 20px;
+	        }
+	    
+	        h3 {
+	            font-size: 25px;
+	            line-height: 30px;
+	            font-weight: normal;
+	        }
+	    
+	        a {
+	            color: #db4c3f;
+	            text-decoration: none;
+	        }
+	    
+	        p {
+	            font-size:14px;
+	            margin:8px 0 0;
+	        }
+	    
+	        #container{
+	            margin:53px auto;
+	            max-width:400px;
+	            text-align:left;
+	            padding: 20px;
+	            background:#fff;
+	        }
+	    
+	        .logo {
+	            margin-bottom: 60px;
+	            margin-top: 0;
+	        }
+	    
+	        .button {
+	          border: 0;
+	          border-radius: 3px;
+	          font-size: 14px;
+	          font-weight: 600;
+	          letter-spacing: 0.05em;
+	          line-height: 1.2;
+	          padding: 10px 15px;
+	          color: white;
+	          cursor: pointer;
+	          background-color: #db4c3f;
+	          display: inline-block;
+	          margin-bottom: 10px;
+	        }
+	    
+	        .buttons {
+	          margin-top: 50px;
+	          text-align: center;
+	        }
+	    </style>
+	
+	</head>
+	
+	<body>
+	
+	    <body>
+	
+	
+	
+	
+	        <div id="container">
+	            <p class="logo">
+	                <a href="https://todoist.com/">
+	            <img src="https://d3ptyyxy2at9ui.cloudfront.net/logo-todoist-b5b89f.svg" height="35" />
+	        </a>
+	            </p>
+	
+	            <h3>Sorry, the page you're looking for isn’t here anymore</h3>
+	
+	            <p>
+	
+	
+	                If you reached this page from another part of <a href="https://todoist.com/">todoist.com</a>, please <a href="https://get.todoist.help/">let us know</a> so we can correct our mistake.
+	            </p>
+	        </div>
+	
+	    </body>
+	
+	</body>
+	
+	</html>
+	
+		

@@ -1,0 +1,16 @@
+
+	• Reopen a task
+
+	- curl -X POST "https://api.todoist.com/rest/v2/tasks/7240177104/reopen" -H "Authorization: Bearer  token"
+	Status:
+	204 (No Content)
+	- ============================================================================================================================
+	-   curl -X POST "https://api.todoist.com/rest/v2/tasks/000007240177104/reopen" -H "Authorization: Bearer  token"
+	Status:
+	204 (No Content)
+	- ============================================================================================================================
+	- curl -X POST "https://api.todoist.com/rest/v2/tasks/97240177104/reopen" -H "Authorization: Bearer  token"
+	Status:
+	404 (Not Found)
+	Task not found
+	

@@ -1,0 +1,28 @@
+	• Delete a task
+	- curl -X DELETE "https://api.todoist.com/rest/v2/tasks/7240177104" -H "Authorization: Bearer token"
+	Status:
+	204 (No Content)
+	
+	- ============================================================================================================================
+	- curl -X DELETE "https://api.todoist.com/rest/v2/tasks/00000000000000000000000000000000000007240177104" -H "Authorization: Bearer token"
+	Status:
+	204 (No Content)
+	- ============================================================================================================================
+	- curl -X DELETE "https://api.todoist.com/rest/v2/tasks/24000004353450000037240000001771000000004" -H "Authorization: Bearer token"
+	Status:
+	204 (No Content)
+	- ============================================================================================================================
+	- curl -X DELETE "https://api.todoist.com/rest/v2/tasks/7240BAD177104" -H "Authorization: Bearer token"
+	Status:
+	400 (Bad Request)
+	Task is invalid
+	- ============================================================================================================================
+	- curl -X DELETE "https://api.todoist.com/rest/v2/tasks/000000000" -H "Authorization: Bearer token"
+	Status:
+	400 (Bad Request)
+	Task is invalid
+	- ============================================================================================================================
+	- curl -X DELETE "https://api.todoist.com/rest/v2/tasks/0000000001" -H "Authorization: Bearer token"
+	Status:
+	204 (No Content)
+	

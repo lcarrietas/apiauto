@@ -1,0 +1,84 @@
+	• Update a task
+
+	- curl "https://api.todoist.com/rest/v2/tasks/7240177104" -X POST --data '{"content": "Buy Coffee"}' -H "Content-Type: application/json" -H "Authorization: Bearer token"
+	Status:200 (OK)
+	
+	{
+	    "id": "7240177104",
+	    "assigner_id": null,
+	    "assignee_id": null,
+	    "project_id": "2319709350",
+	    "section_id": null,
+	    "parent_id": null,
+	    "order": 6,
+	    "content": "Buy Coffee",
+	    "description": "",
+	    "is_completed": false,
+	    "labels": [],
+	    "priority": 4,
+	    "comment_count": 0,
+	    "creator_id": "45724885",
+	    "created_at": "2023-09-18T19:33:46.368822Z",
+	    "due": {
+	        "date": "2023-09-19",
+	        "string": "tomorrow at 12:00",
+	        "lang": "en",
+	        "is_recurring": false,
+	        "datetime": "2023-09-19T12:00:00"
+	    },
+	    "url": "https://todoist.com/showTask?id=7240177104",
+	    "duration": null
+	}
+	- ============================================================================================================================
+	- curl "https://api.todoist.com/rest/v2/tasks/7240177104" POST --data '{"content": "Buy Coffee"}' -H "Content-Type: application/json" -H "Authorization: Bearer token"
+	Status:200 (OK)
+	
+	{
+	    "id": "7240177104",
+	    "assigner_id": null,
+	    "assignee_id": null,
+	    "project_id": "2319709350",
+	    "section_id": null,
+	    "parent_id": null,
+	    "order": 6,
+	    "content": "Buy Coffee2",
+	    "description": "",
+	    "is_completed": false,
+	    "labels": [],
+	    "priority": 4,
+	    "comment_count": 0,
+	    "creator_id": "45724885",
+	    "created_at": "2023-09-18T19:33:46.368822Z",
+	    "due": {
+	        "date": "2023-09-19",
+	        "string": "tomorrow at 12:00",
+	        "lang": "en",
+	        "is_recurring": false,
+	        "datetime": "2023-09-19T12:00:00"
+	    },
+	    "url": "https://todoist.com/showTask?id=7240177104",
+	    "duration": null
+	}
+	- ============================================================================================================================
+	- curl "https://api.todoist.com/rest/v2/tasks/7240177104" -X POST --data '{"content": "Buy Coffee3"}' -H "Authorization: Bearer token"
+	400 (Bad Request)
+	
+	At least one of supported fields should be set and non-empty
+	- ============================================================================================================================
+	- curl "https://api.todoist.com/rest/v2/tasks/7240177104" -X POST --data '{}' -H "Content-Type: application/json" -H "Authorization: Bearer token"
+	Status:
+	400 (Bad Request)
+	
+	At least one of supported fields should be set and non-empty
+	- ============================================================================================================================
+	- curl "https://api.todoist.com/rest/v2/tasks/7240177104" -X POST --data '{"contents": "Buy Coffee3"}' -H "Content-Type: application/json" -H "Authorization: Bearer token"
+	Status:
+	400 (Bad Request)
+	At least one of supported fields should be set and non-empty
+	- ============================================================================================================================
+	- curl "https://api.todoist.com/rest/v2/tasks/7240177104" -X POST '{"content": "Buy Coffee4"}' -H "Content-Type: application/json" -H "Authorization: Bearer token"
+	Status:
+	400 (Bad Request)
+	
+	At least one of supported fields should be set and non-empty
+	
