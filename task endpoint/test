@@ -1,1 +1,4 @@
-
+Note:
+Get active tasks endpoint curls have different format as it was performed in curl.exe windows tool.
+While the rest of curls where executed in an online curl tool in https://reqbin.com/curl, 
+because it was not possible to run those endpoint request in the windows curl tool (500 error was received and the request body was not accepted).
