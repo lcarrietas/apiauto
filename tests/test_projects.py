@@ -4,6 +4,9 @@ import pytest
 
 class TestProjects:
     def setup_class(self):
+         """
+        Setup environment
+        """
         print("Setup class")
         # arrange of test
         self.token = "9463fd6e63c3ac3e06372045795ef48264968d2c"
@@ -44,6 +47,9 @@ class TestProjects:
 
     @pytest.mark.smoke
     def test_get_project(self, test_get_all_projects):
+         """
+        Test get Project
+        """
 
         url = self.url_base + "/" + test_get_all_projects
         response = requests.get(url, headers=self.headers)
@@ -52,6 +58,9 @@ class TestProjects:
 
     @pytest.mark.update
     def test_update_project(self, test_get_all_projects):
+         """
+        Test update Project
+        """
         url = self.url_base + "/" + test_get_all_projects
         data_update = {
             "name": "Project 2",
@@ -63,6 +72,9 @@ class TestProjects:
 
     @pytest.mark.smoke
     def test_delete_project(self, test_get_all_projects):
+         """
+        Test delete Project
+        """
         url = self.url_base + "/" + test_get_all_projects
         response = requests.delete(url, headers=self.headers)
         # print(response.json())
@@ -70,4 +82,7 @@ class TestProjects:
 
     @classmethod
     def teardown_class(cls):
+         """
+        Teardown
+        """
          print("teardown")
