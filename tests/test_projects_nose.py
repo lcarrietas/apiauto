@@ -62,6 +62,9 @@ class Projects(unittest.TestCase):
         assert response.status_code == 200
 
     def test_delete_project(self):
+         """
+        Test delete Project
+        """
         url = f"{self.url_base}/{self.project_id}"
         print(f"Test Delete: {self.project_id}")
         response = requests.delete(url, headers=self.headers)
@@ -69,6 +72,9 @@ class Projects(unittest.TestCase):
         assert response.status_code == 204
 
     def test_update_project(self):
+         """
+        Test update Project
+        """
         url = f"{self.url_base}/{self.project_id_update}"
         data_update = {
             "name": "Project 2",
@@ -80,6 +86,9 @@ class Projects(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+         """
+        Teardown 
+        """
         print("tearDown Class")
         # delete projects created
         for project in cls.projects_list:
