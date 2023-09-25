@@ -1,5 +1,6 @@
 import hvac
 
+
 def get_token():
     """
     Get API Token from Vault
