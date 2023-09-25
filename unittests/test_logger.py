@@ -9,6 +9,9 @@ LOGGER = get_logger(__name__, logging.DEBUG)
 class TestLogger(unittest.TestCase):
 
     def test_logger(self):
+         """
+        Test Logger
+        """
         LOGGER.debug("log DEBUG level")
         LOGGER.info("log INFO level")
         LOGGER.warning("log WARNING level")
