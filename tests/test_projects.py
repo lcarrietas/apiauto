@@ -1,17 +1,16 @@
 import requests
 import pytest
 
-
 class TestProjects:
     def setup_class(self):
-         """
+        """
         Setup environment
         """
         print("Setup class")
         # arrange of test
-        self.token = "9463fd6e63c3ac3e06372045795ef48264968d2c"
+        self.token = "850a188a9803d63276f6b868dd23ce10f9b0f802"
         self.headers = {
-            "Authorization": "Bearer {}".format(self.token)
+        "Authorization": "Bearer {}".format(self.token)
         }
         self.url_base = "https://api.todoist.com/rest/v2/projects"
 
@@ -47,7 +46,7 @@ class TestProjects:
 
     @pytest.mark.smoke
     def test_get_project(self, test_get_all_projects):
-         """
+        """
         Test get Project
         """
 
@@ -58,7 +57,7 @@ class TestProjects:
 
     @pytest.mark.update
     def test_update_project(self, test_get_all_projects):
-         """
+        """
         Test update Project
         """
         url = self.url_base + "/" + test_get_all_projects
@@ -72,7 +71,7 @@ class TestProjects:
 
     @pytest.mark.smoke
     def test_delete_project(self, test_get_all_projects):
-         """
+        """
         Test delete Project
         """
         url = self.url_base + "/" + test_get_all_projects
@@ -82,7 +81,7 @@ class TestProjects:
 
     @classmethod
     def teardown_class(cls):
-         """
+        """
         Teardown
         """
-         print("teardown")
+        print("teardown")

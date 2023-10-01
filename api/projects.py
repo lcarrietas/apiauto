@@ -1,3 +1,9 @@
+"""
+(c) Copyright Jalasoft. 2023
+
+projects.py
+    test todoist endpoints using nose2
+"""
 import logging
 import unittest
 import requests
@@ -6,13 +12,13 @@ from nose2.tools import params
 from config.config import TOKEN_TODO
 from utils.logger import get_logger
 
-"""
-Test for nose2
-"""
 LOGGER = get_logger(__name__, logging.INFO)
 
 
 class Projects(unittest.TestCase):
+    """
+    Test for nose2
+    """
 
     @classmethod
     def setUpClass(cls):
@@ -24,7 +30,7 @@ class Projects(unittest.TestCase):
 
         print("Token from .env file: ", cls.token)
         cls.headers = {
-            "Authorization": "Bearer {}".format(cls.token)
+            "Authorization": f"Bearer {cls.token}"
         }
         cls.url_base = "https://api.todoist.com/rest/v2/projects"
 
@@ -70,7 +76,7 @@ class Projects(unittest.TestCase):
         assert response.status_code == 200
 
     def test_delete_project(self):
-       """
+        """
         Test Delete Project
         """
         url = f"{self.url_base}/{self.project_id}"
@@ -80,7 +86,7 @@ class Projects(unittest.TestCase):
         assert response.status_code == 204
 
     def test_update_project(self):
-       """
+        """
         Test update Project
         """
         url = f"{self.url_base}/{self.project_id_update}"
@@ -94,7 +100,7 @@ class Projects(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-       """
+        """
         Delete Test Projects
         """
         print("tearDown Class")
@@ -102,4 +108,4 @@ class Projects(unittest.TestCase):
         for project in cls.projects_list:
             url = f"{cls.url_base}/{project}"
             requests.delete(url, headers=cls.headers)
-            LOGGER.info(f"Deleting project: {project}")
+            LOGGER.info("Deleting project: %s", project)

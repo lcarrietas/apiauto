@@ -9,7 +9,7 @@ LOGGER = get_logger(__name__, logging.DEBUG)
 class TestLogger(unittest.TestCase):
 
     def test_logger(self):
-         """
+        """
         Test Logger
         """
         LOGGER.debug("log DEBUG level")
