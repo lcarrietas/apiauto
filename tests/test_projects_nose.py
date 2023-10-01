@@ -1,23 +1,33 @@
+"""
+(c) Copyright Jalasoft. 2023
+
+test_projects_nose.py
+    test todoist endpoints using nose2
+"""
+import logging
 import unittest
 import requests
 from nose2.tools import params
 
-"""
-Test for nose2
-"""
+from utils.logger import get_logger
+
+
+LOGGER = get_logger(__name__, logging.INFO)
 
 
 class Projects(unittest.TestCase):
-
+    """
+    Test for nose2
+    """
     @classmethod
     def setUpClass(cls):
         """
         Setup Class only executed one time
         """
         print("Setup Class")
-        cls.token = "9463fd6e63c3ac3e06372045795ef48264968d2c"
+        cls.token = "850a188a9803d63276f6b868dd23ce10f9b0f802"
         cls.headers = {
-            "Authorization": "Bearer {}".format(cls.token)
+            "Authorization": f"Bearer {cls.token}"
         }
         cls.url_base = "https://api.todoist.com/rest/v2/projects"
 
@@ -47,8 +57,9 @@ class Projects(unittest.TestCase):
             "name": name_project
         }
         response = requests.post(self.url_base, headers=self.headers, data=body_project)
-        print(response.json())
+        LOGGER.info("Repponse for create project: %s", response.json())
         self.project_id_update = response.json()["id"]
+        LOGGER.debug("Project id generated: %s", self.project_id_update)
         self.projects_list.append(self.project_id_update)
         assert response.status_code == 200
 
@@ -62,7 +73,7 @@ class Projects(unittest.TestCase):
         assert response.status_code == 200
 
     def test_delete_project(self):
-         """
+        """
         Test delete Project
         """
         url = f"{self.url_base}/{self.project_id}"
@@ -72,7 +83,7 @@ class Projects(unittest.TestCase):
         assert response.status_code == 204
 
     def test_update_project(self):
-         """
+        """
         Test update Project
         """
         url = f"{self.url_base}/{self.project_id_update}"
@@ -86,12 +97,12 @@ class Projects(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-         """
-        Teardown 
+        """
+        Teardown
         """
         print("tearDown Class")
         # delete projects created
         for project in cls.projects_list:
             url = f"{cls.url_base}/{project}"
             requests.delete(url, headers=cls.headers)
-            print(f"Deleting project: {project}")
+            LOGGER.info("Deleting project: %s", project)

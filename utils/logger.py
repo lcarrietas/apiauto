@@ -34,6 +34,7 @@ def get_logger(name, level=DEFAULT_LOG_LEVEL, log_format=DEFAULT_LOG_FORMAT):
 
     for handler in logger.handlers:
         logger.removeHandler(handler)
+
     handler = logging.StreamHandler(sys.__stdout__)
     handler.setLevel(level)
     abs_path = os.path.abspath(__file__ + "../../../")
@@ -54,4 +55,3 @@ def get_logger(name, level=DEFAULT_LOG_LEVEL, log_format=DEFAULT_LOG_FORMAT):
     logger.setLevel(level)
 
     return logger
-  
