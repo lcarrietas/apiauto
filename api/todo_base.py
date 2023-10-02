@@ -52,7 +52,7 @@ class TodoBase(metaclass=Singleton):
         """
         response = RestClient().send_request("get", session=self.session,
                                              url=self.url_tasks, headers=HEADERS)
-        if len(response) == 0:
+        if len(response['body']) == 0:
             raise AssertionError("No tasks available")
 
         return response

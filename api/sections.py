@@ -28,14 +28,14 @@ class Sections(unittest.TestCase):
 
         cls.project_id = TodoBase().get_all_projects()['body'][1]["id"]
 
-    def test_create_session(self):
+    def test_create_section(self):
         """
         Test to create session
         :return:
         """
         data = {
             "project_id": self.project_id,
-            "name": "Section 2"
+            "name": "Test Create Section"
         }
         response = RestClient().send_request("post", session=self.session, headers=HEADERS,
                                              url=self.url_section, data=data)
@@ -72,3 +72,40 @@ class Sections(unittest.TestCase):
         response = RestClient().send_request("get", session=self.session, headers=HEADERS,
                                              url=url_section)
         assert response["status"] == 200
+
+    def test_update_section(self):
+        """
+        test update section
+        """
+        section_created = self.create_section('Vscode section')
+        section_id = section_created["body"]["id"]
+        data_update = {
+            "name": "Udated Vscode Section"
+        }
+        url = f"{self.url_section}/{section_id}"
+        response = RestClient().send_request("post", session=self.session, url=url,
+                                             headers=HEADERS, data=data_update)
+        assert response["status"] == 200
+
+    def create_section(self, name_section):
+        """
+        Create project aux method
+        """
+        data = {
+            "project_id": self.project_id,
+            "name": name_section
+        }
+        response = RestClient().send_request("post", session=self.session, url=self.url_section,
+                                             headers=HEADERS, data=data)
+        return response
+
+    def test_delete_section(self):
+        """
+        test delete section
+        """
+        section_created = self.create_section('section to delete')
+        section_id = section_created["body"]["id"]
+        url = f"{self.url_section}/{section_id}"
+        response = RestClient().send_request("delete", session=self.session, url=url,
+                                             headers=HEADERS)
+        assert response["status"] == 204
