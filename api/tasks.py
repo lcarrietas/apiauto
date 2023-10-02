@@ -34,7 +34,7 @@ class Tasks(unittest.TestCase):
         """
         Test Create Task
         """
-        response = self.create_task()
+        response = self.create_task("Task test create")
         assert response['status'] == 200
 
     def test_create_task_with_project_id(self):
@@ -42,7 +42,7 @@ class Tasks(unittest.TestCase):
         Test Create Task using project id
         """
         project_id = self.project_id
-        response = self.create_task(project_id=project_id)
+        response = self.create_task("Task inside specific project",project_id=project_id)
         assert response['status'] == 200
 
     def test_create_task_with_section_id(self):
@@ -50,7 +50,7 @@ class Tasks(unittest.TestCase):
         Test Create Task using section id
         """
         section_id = self.section_id
-        response = self.create_task(section_id=section_id)
+        response = self.create_task("test create Task inside section",section_id=section_id)
         assert response['status'] == 200
 
     def test_get_all_tasks(self):
@@ -66,7 +66,7 @@ class Tasks(unittest.TestCase):
         Test get Task by id
         """
         task_id = self.task_id
-        LOGGER.info("Task Id: %s", task_id)
+        LOGGER.info("Task Id to search task by ID: %s", task_id)
         url_task = f"{self.url_tasks}/{task_id}"
         response = RestClient().send_request("get", session=self.session,
                                              headers=HEADERS, url=url_task)
@@ -77,7 +77,7 @@ class Tasks(unittest.TestCase):
         Test Close Task
         """
         task_id = self.task_id
-        LOGGER.info("Task Id: %s", task_id)
+        LOGGER.info("Task Id to close: %s", task_id)
         url_task_close = f"{self.url_tasks}/{task_id}/close"
         response = RestClient().send_request("post", session=self.session, headers=HEADERS,
                                              url=url_task_close)
@@ -89,7 +89,7 @@ class Tasks(unittest.TestCase):
         Test reopen Task
         """
         # valid task open
-        task_id = self.create_task()['body']["id"]
+        task_id = self.create_task("Task to reopen")['body']["id"]
 
         # close
         url_task_close = f"{self.url_tasks}/{task_id}/close"
@@ -105,12 +105,37 @@ class Tasks(unittest.TestCase):
 
         assert response['status'] == 204
 
-    def create_task(self, project_id=None, section_id=None):
+    def test_update_task(self):
+        """
+        Test update Task
+        """
+        # valid task
+        task_id = self.create_task("Task to update")['body']["id"]
+        update_data = {"content": "Updated to Buy Coffee"}
+        LOGGER.info("Task Id to update: %s", task_id)
+        url_task_update = f"{self.url_tasks}/{task_id}"
+        response = RestClient().send_request("post", session=self.session, headers=HEADERS,
+                                             url=url_task_update, data=update_data)
+
+        assert response['status'] == 200
+
+    def test_delete_task(self):
+        """"
+        Tet delete task
+        """
+        task_id = self.create_task("Task to delete")['body']["id"]
+        LOGGER.info("Task Id to delete: %s", task_id)
+        url_task_delete = f"{self.url_tasks}/{task_id}"
+        response = RestClient().send_request("delete", session=self.session, headers=HEADERS,
+                                             url=url_task_delete)
+        assert response['status'] == 204
+
+    def create_task(self, content, project_id=None, section_id=None):
         """
         Create Task request method
         """
         data = {
-            "content": "Task inside section",
+            "content": content,
             "due_string": "tomorrow at 12:00",
             "due_lang": "en",
             "priority": 4
