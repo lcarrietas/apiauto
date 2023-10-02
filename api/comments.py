@@ -29,9 +29,9 @@ class Comments(unittest.TestCase):
         cls.task_id = TodoBase().get_all_tasks()['body'][1]["id"]
         cls.comment_id = TodoBase().get_all_comments(cls.task_id)['body'][0]["id"]
 
-    def test_create_task(self):
+    def test_create_comment(self):
         """
-        Test Create Task
+        Test Create Comment
         """
         LOGGER.info("Creating comment under : %s", self.task_id)
         response = self.create_comment("Content for test create comment", self.task_id)
@@ -71,9 +71,9 @@ class Comments(unittest.TestCase):
 
         assert response['status'] == 200
 
-    def test_delete_task(self):
+    def test_delete_comment(self):
         """"
-        Tet delete task
+        Tet delete Comment
         """
         # valid comment to update
         comment_id = self.create_comment("  Content for test delete comment",
