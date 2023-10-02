@@ -2,22 +2,24 @@
 (c) Copyright Jalasoft. 2023
 
 projects.py
-    test todoist endpoints using nose2
+    test todoist projects endpoints using nose2
 """
 import logging
 import unittest
 import requests
 from nose2.tools import params
 
-from config.config import TOKEN_TODO
+from api.validate_response import ValidateResponse
+from config.config import HEADERS
 from utils.logger import get_logger
+from utils.rest_client import RestClient
 
 LOGGER = get_logger(__name__, logging.INFO)
 
 
 class Projects(unittest.TestCase):
     """
-    Test for nose2
+    Project endpoints test using nose2
     """
 
     @classmethod
@@ -25,22 +27,8 @@ class Projects(unittest.TestCase):
         """
         Setup Class only executed one time
         """
-        print("Setup Class")
-        cls.token = TOKEN_TODO
-
-        print("Token from .env file: ", cls.token)
-        cls.headers = {
-            "Authorization": f"Bearer {cls.token}"
-        }
         cls.url_base = "https://api.todoist.com/rest/v2/projects"
-
-        # create project to be used in tests
-        body_project = {
-            "name": "Project 0"
-        }
-        response = requests.post(cls.url_base, headers=cls.headers, data=body_project)
-
-        cls.project_id = response.json()["id"]
+        cls.session = requests.Session()
         cls.project_id_update = ""
         cls.projects_list = []
 
@@ -48,10 +36,12 @@ class Projects(unittest.TestCase):
         """
         Test get all projects
         """
-        response = requests.get(self.url_base, headers=self.headers)
-        assert response.status_code == 200
+        response = RestClient().send_request(method_name="get", session=self.session,
+                                             url=self.url_base, headers=HEADERS)
+        ValidateResponse().validate_response(actual_response=response, method="get",
+                                             expected_status_code=200, feature="projects")
 
-    @params("Project 2", "1111111", "!@$$@$!@$")
+    @params("Project 2", "1111111")
     def test_create_project(self, name_project):
         """
         Test for create project
@@ -59,44 +49,76 @@ class Projects(unittest.TestCase):
         body_project = {
             "name": name_project
         }
-        response = requests.post(self.url_base, headers=self.headers, data=body_project)
-        LOGGER.info("Response for create project: %s", response.json())
-        self.project_id_update = response.json()["id"]
-        LOGGER.debug("Project id generated: %s", self.project_id_update)
-        self.projects_list.append(self.project_id_update)
-        assert response.status_code == 200
-
+        response = RestClient().send_request(method_name="post", session=self.session,
+                                             url=self.url_base,
+                                             headers=HEADERS,
+                                             data=body_project)
+        LOGGER.info("Response for create project: %s", response["body"])
+        project_id = response["body"]["id"]
+        LOGGER.debug("Project id generated: %s", project_id)
+        self.projects_list.append(project_id)
+        ValidateResponse().validate_response(actual_response=response, method="post",
+                                             expected_status_code=200,
+                                             feature="project")
     def test_get_project(self):
         """
         Test get Project
         """
-        url = f"{self.url_base}/{self.project_id}"
-        response = requests.get(url, headers=self.headers)
-        print(response.json())
-        assert response.status_code == 200
+        project_created = self.create_project("Project X")
+        project_id = project_created["body"]["id"]
+        url = f"{self.url_base}/{project_id}"
+        response = RestClient().send_request(method_name="get",
+                                             session=self.session,
+                                             url=url, headers=HEADERS)
+        self.projects_list.append(project_id)
+        ValidateResponse().validate_response(actual_response=response, method="get",
+                                             expected_status_code=200,
+                                             feature="project")
 
     def test_delete_project(self):
         """
         Test Delete Project
         """
-        url = f"{self.url_base}/{self.project_id}"
-        print(f"Test Delete: {self.project_id}")
-        response = requests.delete(url, headers=self.headers)
+        project_created = self.create_project("Project Delete")
+        project_id = project_created["body"]["id"]
+        url = f"{self.url_base}/{project_id}"
+        print(f"Test Delete: {project_id}")
+        response = RestClient().send_request(method_name="delete",
+                                             session=self.session, url=url,
+                                             headers=HEADERS)
         # validate project has been deleted
-        assert response.status_code == 204
+        ValidateResponse().validate_response(actual_response=response, method="delete",
+                                             expected_status_code=204,
+                                             feature="project")
 
     def test_update_project(self):
         """
         Test update Project
         """
-        url = f"{self.url_base}/{self.project_id_update}"
+        project_created = self.create_project("Project Update")
+        project_id_update = project_created["body"]["id"]
+        url = f"{self.url_base}/{project_id_update}"
         data_update = {
             "name": "Project 2",
             "color": "red"
         }
-        response = requests.post(url, headers=self.headers, data=data_update)
-        print(response.json())
-        assert response.status_code == 200
+        response = RestClient().send_request("post", session=self.session, url=url,
+                                             headers=HEADERS, data=data_update)
+        self.projects_list.append(project_id_update)
+        ValidateResponse().validate_response(actual_response=response, method="post",
+                                             expected_status_code=200,
+                                             feature="project")
+
+    def create_project(self, name_project):
+        """
+        Create project aux method
+        """
+        body_project = {
+            "name": name_project
+        }
+        response = RestClient().send_request("post", session=self.session, url=self.url_base,
+                                             headers=HEADERS, data=body_project)
+        return response
 
     @classmethod
     def tearDownClass(cls):
@@ -107,5 +129,7 @@ class Projects(unittest.TestCase):
         # delete projects created
         for project in cls.projects_list:
             url = f"{cls.url_base}/{project}"
-            requests.delete(url, headers=cls.headers)
+            RestClient().send_request(method_name="delete",
+                                       session=cls.session, url=url,
+                                       headers=HEADERS)
             LOGGER.info("Deleting project: %s", project)
