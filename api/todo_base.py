@@ -19,6 +19,7 @@ class TodoBase(metaclass=Singleton):
         self.url_projects = "https://api.todoist.com/rest/v2/projects"
         self.url_sections = "https://api.todoist.com/rest/v2/sections"
         self.url_tasks = "https://api.todoist.com/rest/v2/tasks"
+        self.url_comments = "https://api.todoist.com/rest/v2/comments"
         self.session = requests.Session()
 
     def get_all_projects(self):
@@ -52,6 +53,19 @@ class TodoBase(metaclass=Singleton):
         """
         response = RestClient().send_request("get", session=self.session,
                                              url=self.url_tasks, headers=HEADERS)
+        if len(response['body']) == 0:
+            raise AssertionError("No tasks available")
+
+        return response
+
+    def get_all_comments(self, task_id):
+        """
+
+        :return: Found comments if any
+        """
+        url = f"{self.url_comments}?task_id={task_id}"
+        response = RestClient().send_request("get", session=self.session,
+                                             url=url, headers=HEADERS)
         if len(response['body']) == 0:
             raise AssertionError("No tasks available")
 
