@@ -1,11 +1,13 @@
 """
 (c) Copyright Jalasoft. 2023
 
-projects.py
-    test todoist projects endpoints using nose2
+test_projects.py
+    file to implement projects endpoint from todoist API
 """
 import logging
 import unittest
+
+import allure
 import requests
 from nose2.tools import params
 
@@ -14,12 +16,13 @@ from config.config import HEADERS
 from utils.logger import get_logger
 from utils.rest_client import RestClient
 
-LOGGER = get_logger(__name__, logging.INFO)
+LOGGER = get_logger(__name__, logging.DEBUG)
 
 
+@allure.feature("PROJECTS")
 class Projects(unittest.TestCase):
     """
-    Project endpoints test using nose2
+    Class for projects endpoint
     """
 
     @classmethod
@@ -41,6 +44,7 @@ class Projects(unittest.TestCase):
         ValidateResponse().validate_response(actual_response=response, method="get",
                                              expected_status_code=200, feature="projects")
 
+    @allure.story("POST create project")
     @params("Project 2", "1111111")
     def test_create_project(self, name_project):
         """
@@ -49,8 +53,7 @@ class Projects(unittest.TestCase):
         body_project = {
             "name": name_project
         }
-        response = RestClient().send_request(method_name="post", session=self.session,
-                                             url=self.url_base,
+        response = RestClient().send_request("post", session=self.session, url=self.url_base,
                                              headers=HEADERS,
                                              data=body_project)
         LOGGER.info("Response for create project: %s", response["body"])
@@ -58,8 +61,10 @@ class Projects(unittest.TestCase):
         LOGGER.debug("Project id generated: %s", project_id)
         self.projects_list.append(project_id)
         ValidateResponse().validate_response(actual_response=response, method="post",
-                                             expected_status_code=200,
-                                             feature="project")
+                                             expected_status_code=200, feature="project")
+
+    test_create_project.tags = ["acceptance", "smoke"]
+
     def test_get_project(self):
         """
         Test get Project
@@ -67,33 +72,27 @@ class Projects(unittest.TestCase):
         project_created = self.create_project("Project X")
         project_id = project_created["body"]["id"]
         url = f"{self.url_base}/{project_id}"
-        response = RestClient().send_request(method_name="get",
-                                             session=self.session,
+        response = RestClient().send_request("get", session=self.session,
                                              url=url, headers=HEADERS)
         self.projects_list.append(project_id)
         ValidateResponse().validate_response(actual_response=response, method="get",
-                                             expected_status_code=200,
-                                             feature="project")
+                                             expected_status_code=200, feature="project")
 
     def test_delete_project(self):
         """
-        Test Delete Project
+        Test delete project
         """
         project_created = self.create_project("Project Delete")
         project_id = project_created["body"]["id"]
         url = f"{self.url_base}/{project_id}"
-        print(f"Test Delete: {project_id}")
-        response = RestClient().send_request(method_name="delete",
-                                             session=self.session, url=url,
+        response = RestClient().send_request(method_name="delete", session=self.session, url=url,
                                              headers=HEADERS)
-        # validate project has been deleted
         ValidateResponse().validate_response(actual_response=response, method="delete",
-                                             expected_status_code=204,
-                                             feature="project")
+                                             expected_status_code=204, feature="project")
 
     def test_update_project(self):
         """
-        Test update Project
+        Test update project
         """
         project_created = self.create_project("Project Update")
         project_id_update = project_created["body"]["id"]
@@ -106,13 +105,32 @@ class Projects(unittest.TestCase):
                                              headers=HEADERS, data=data_update)
         self.projects_list.append(project_id_update)
         ValidateResponse().validate_response(actual_response=response, method="post",
-                                             expected_status_code=200,
-                                             feature="project")
+                                             expected_status_code=200, feature="project")
+
+    @allure.story("POST create project")
+    def test_create_project_with_empty(self):
+        """
+        Test for validate error message with empty project name
+        """
+        body_project = {
+            "name": ""
+        }
+        response = RestClient().send_request("post", session=self.session, url=self.url_base,
+                                             headers=HEADERS,
+                                             data=body_project)
+
+        ValidateResponse().validate_response(actual_response=response, method="post",
+                                             expected_status_code=400, feature="project")
+
+    test_create_project_with_empty.tags = ["negative"]
 
     def create_project(self, name_project):
         """
-        Create project aux method
+        Method to create project
+        :param name_project:   str   Project name for todoist API
+        :return:               dict  Response for API created project
         """
+
         body_project = {
             "name": name_project
         }
@@ -123,13 +141,12 @@ class Projects(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         """
-        Delete Test Projects
+        TearDownClass method to clean up resources
         """
-        print("tearDown Class")
+        LOGGER.debug("tearDown Class")
         # delete projects created
         for project in cls.projects_list:
             url = f"{cls.url_base}/{project}"
-            RestClient().send_request(method_name="delete",
-                                       session=cls.session, url=url,
-                                       headers=HEADERS)
+            RestClient().send_request(method_name="delete", session=cls.session, url=url,
+                                      headers=HEADERS)
             LOGGER.info("Deleting project: %s", project)
