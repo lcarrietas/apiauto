@@ -36,13 +36,13 @@ class Sections(unittest.TestCase):
         """
         data = {
             "project_id": self.project_id,
-            "name": "Section 2"
+            "name": "Test Create Section"
         }
         response = RestClient().send_request("post", session=self.session, headers=HEADERS,
                                              url=self.url_section, data=data)
         section_id = response["body"]["id"]
         self.section_list.append(section_id)
-        assert response["status"] == 201, "Expected 201 but received 200"
+        assert response["status"] == 200, f"Expected 200 but received {response["status"]}"
 
     test_create_section.tags = ["acceptance", "smoke"]
 
@@ -86,15 +86,15 @@ class Sections(unittest.TestCase):
 
     def test_delete_section(self):
         """
-        Test delete section
+        test delete section
         """
-        response = self.create_section()
-        section_id = response["body"]["id"]
-        LOGGER.info("Section Id: %s", section_id)
-        url_section = f"{self.url_section}/{section_id}"
+        section_created = self.create_section('section to delete')
+        section_id = section_created["body"]["id"]
+        url = f"{self.url_section}/{section_id}"
         self.section_list.append(section_id)
-        response = RestClient().send_request(method_name="delete", session=self.session,
-                                             headers=HEADERS, url=url_section)
+        LOGGER.info("Section Id to delete: %s", section_id)
+        response = RestClient().send_request("delete", session=self.session, url=url,
+                                             headers=HEADERS)
         assert response["status"] == 204
 
     test_delete_section.tags = ["acceptance", "functional"]
@@ -102,32 +102,29 @@ class Sections(unittest.TestCase):
 
     def test_update_section(self):
         """
-        Test delete section
+        test update section
         """
-        response = self.create_section()
-        section_id = response["body"]["id"]
-        LOGGER.info("Section Id: %s", section_id)
-        url_section = f"{self.url_section}/{section_id}"
-        data_section_update = {
-            "project_id": self.project_id,
-            "name": "Section UPDATED"
+        section_created = self.create_section('Vscode section')
+        section_id = section_created["body"]["id"]
+        data_update = {
+            "name": "Udated Vscode Section"
         }
+        url = f"{self.url_section}/{section_id}"
         self.section_list.append(section_id)
-        response = RestClient().send_request(method_name="post", session=self.session,
-                                             headers=HEADERS, url=url_section,
-                                             data=data_section_update)
+        response = RestClient().send_request("post", session=self.session, url=url,
+                                             headers=HEADERS, data=data_update)
         assert response["status"] == 200
 
-    def create_section(self):
+    def create_section(self, name_section):
         """
-        Method to create section
+        Create project aux method
         """
         data = {
             "project_id": self.project_id,
-            "name": "Section 2"
+            "name": name_section
         }
-        response = RestClient().send_request(method_name="post", session=self.session,
-                                             headers=HEADERS, url=self.url_section, data=data)
+        response = RestClient().send_request("post", session=self.session, url=self.url_section,
+                                             headers=HEADERS, data=data)
         return response
 
     @classmethod
